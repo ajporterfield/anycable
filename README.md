@@ -1,4 +1,4 @@
-## Setting Up a Rails Project with AnyCable for Websockets
+## Project Setup
 This guide will walk you through setting up a Rails project that uses AnyCable for Websockets. It is designed to be developer friendly, suitable for both experienced developers and newcomers alike.
 
 ### Prerequisites
@@ -149,7 +149,7 @@ bundle exec rails console
 
 Inside the Rails console, you can interact with your Rails application and test your WebSocket-related code.
 
-ActionCable.server.broadcast "my_messages", message: "Hello from Rails console!"
+ ActionCable.server.broadcast "my_messages", { message: "hi there!!!!!!!" }.to_json
 
 After executing the code in the Rails console, check your browser console for any new WebSocket messages received. You should see the new message created in the Rails console being received by the WebSocket connection in the browser console.
 
