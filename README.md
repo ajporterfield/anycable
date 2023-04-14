@@ -105,10 +105,10 @@ socket.onopen = () => {
   console.log('WebSocket connection opened');
 
   // Send a sample message through the WebSocket
+
   const message = {
-    command: 'message',
+    command: 'subscribe',
     identifier: JSON.stringify({ channel: 'MessagesChannel' }),
-    data: JSON.stringify({ action: 'send_message', content: 'Hello, AnyCable!' }),
   };
   socket.send(JSON.stringify(message));
 };
@@ -128,16 +128,27 @@ socket.onerror = (error) => {
 
 This creates a new WebSocket connection to the AnyCable-Go server and sends a sample message. You should see output in the console indicating that the connection was established and that messages are being sent and received.
 
-
 You should immediatly see some output like this imediatly in the browser console:
 
 ```
 WebSocket connection opened
-VM176:17 WebSocket message received: {"type":"welcome","sid":"paSpXx8kS2-MOLAlh5LJT"}
-VM176:17 WebSocket message received: {"type":"ping","message":1681507346}
+VM1792:18 WebSocket message received: {"type":"welcome","sid":"fRFnko5dKtEvNEmeBS_UY"}
+VM1792:18 WebSocket message received: {"identifier":"{\"channel\":\"MessagesChannel\"}","type":"confirm_subscription"}
+VM1792:18 WebSocket message received: {"type":"ping","message":1681511400}
 ```
 
-And on the server you will see this message show up in the `anycable-go` server logs.
+Try sending a message from the browser console to the server.
+
+```
+const message = {
+  command: 'message',
+  identifier: JSON.stringify({ channel: 'MessagesChannel' }),
+  data: JSON.stringify({ action: 'my_method', foo: 'bar!' }),
+};
+socket.send(JSON.stringify(message));
+```
+
+Check your RPC server (where you ran `bundle exec anycable`) to see the message! 
 
 7.2 Testing in the Rails console
 
