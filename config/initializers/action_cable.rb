@@ -20,6 +20,8 @@ module ActionCable
 
       private
 
+      # These are two new private methods to help facilitate data transformation.
+
       def handle_unrecognized_command(data)
         transformed_data = transform_data(data)
 
