@@ -32,22 +32,20 @@ module ActionCable
         end
       end
 
-      def transform_data
-        return unless data["event"].in?(["start", "media"]) && data["streamSid"]
+      def transform_data(data)
+        return unless data["event"].in?(["start", "media", "stop"]) && data["streamSid"]
 
-        # The start message is transformed into the subscribe command.
-        # See https://www.twilio.com/docs/voice/twiml/stream#message-start
-        if data["event"] == "start"
-          {
-            "command" => "subscribe",
-            "identifier" => data.merge("channel" => "MediaStreamsChannel").to_json
-          }
-        # The media message is routed to the corresponding method in media_streams_channel.rb
-        # See https://www.twilio.com/docs/voice/twiml/stream#message-media
-        else # media
+        identifier = "{\"channel\": \"MediaStreamsChannel\", \"streamSid\": \"#{data["streamSid"]}\"}"
+
+        case data["event"]
+        when "start"
+          { "command" => "subscribe", "identifier" => identifier }
+        when "stop"
+          { "command" => "unsubscribe", "identifier" => identifier }
+        when "media"
           {
             "command" => "message",
-            "identifier" => "{\"channel\": \"MediaStreamsChannel\"}",
+            "identifier" => identifier,
             "data" => data.merge("action" => "media").to_json
           }
         end
